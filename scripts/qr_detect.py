@@ -23,8 +23,19 @@ class image_proc():
 		self.img = np.empty([]) # This will contain your image frame from camera
 		self.bridge = CvBridge()
 
+	def decode(im) : 
+  # Find barcodes and QR codes
+  		decodedObjects = pyzbar.decode(im)
 
-	# Callback function of amera topic
+  # Print results
+  		for obj in decodedObjects:
+    	   print('Type : ', obj.type)
+           print('Data : ', obj.data,'\n')
+    
+        return decodedObjects
+
+
+	# Callback function of camera topic
 	def image_callback(self, data):
 		try:
 			self.img = self.bridge.imgmsg_to_cv2(data, "bgr8") # Converting the image to OpenCV standard image

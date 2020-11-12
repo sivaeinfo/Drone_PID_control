@@ -22,7 +22,7 @@ class Edrone():
         self.cmd_drone.rcRoll = 1500
         self.cmd_drone.rcPitch = 1500
         self.cmd_drone.rcYaw = 1500
-        self.cmd_drone.rcThrottle = 1300
+        self.cmd_drone.rcThrottle = 1500
 
         # The latitude, longitude and altitude of the drone
         self.latitude = 19.0
@@ -133,18 +133,18 @@ class Edrone():
 
         self.cmd_pub.publish(self.cmd_drone)
 
-        #print(self.latitude, self.longitude, self.altitude)
+        print(self.latitude, self.longitude, self.altitude)
 
-        if self.altitude  >= 3.0:
+        if self.altitude  >= 2.9:
             self.target[0] = 19.00004571
-            #print(self.target)
+            print(self.target)
            #time.sleep(2)
 
         if self.latitude >= 19.00004571:
              self.target[2] = 0.31
-             #print(self.target)
+             print(self.target)
             #time.sleep(2)
-
+       
 if __name__ == '__main__':
 
     e_drone = Edrone()

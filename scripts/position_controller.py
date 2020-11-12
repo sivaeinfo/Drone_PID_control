@@ -25,12 +25,12 @@ class Edrone():
         self.cmd_drone.rcThrottle = 1500
 
         # The latitude, longitude and altitude of the drone
-        self.latitude = 19.0
-        self.longitude = 72.0
-        self.altitude = 0
+        self.latitude = 19.0009248718
+        self.longitude = 71.9998318945
+        self.altitude = 22.16
 
         # The coordinates in the target postion vector is in the order latitude, longitude and altitude
-        self.target = [19.000000000, 72.000000, 3.0] #19.0000451700
+        self.target = [19.0007046575, 71.9998955286, 22.1599967919] #19.0000451700
 
         # Initial settings for the values of Kp, Ki and Kd
         self.Kp = [4000000, 50]
@@ -135,15 +135,10 @@ class Edrone():
 
         print(self.latitude, self.longitude, self.altitude)
 
-        if self.altitude  >= 2.9:
-            self.target[0] = 19.00004571
-            print(self.target)
-           #time.sleep(2)
-
-        if self.latitude >= 19.00004571:
-             self.target[2] = 0.31
-             print(self.target)
-            #time.sleep(2)
+        if self.target[1] >= 19.0007046575:
+            if self.target[2] >=  71.9998955286:
+                if self.target[2] >=  22.1599967919:
+                    print('apudi podu dandanaka')
 
 if __name__ == '__main__':
 
