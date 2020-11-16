@@ -1,6 +1,7 @@
+#!/usr/bin/env python
 from sys import argv
-import zbar
-import Image
+import pyzbar as zbar
+
 import cv2
 
 class DetectQRCode(object):

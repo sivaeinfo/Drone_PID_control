@@ -30,7 +30,7 @@ class Edrone():
         self.altitude = 22.16
 
         # The coordinates in the target postion vector is in the order latitude, longitude and altitude
-        self.target = [19.0007046575, 71.9998955286, 22.1599967919] #19.0000451700
+        self.target = [19.000000, 72.000000, 0.8440] #[19.0007046575, 71.9998955286, 22.1599967919] #19.0000451700
 
         # Initial settings for the values of Kp, Ki and Kd
         self.Kp = [4000000, 50]
@@ -135,10 +135,7 @@ class Edrone():
 
         print(self.latitude, self.longitude, self.altitude)
 
-        if self.target[1] >= 19.0007046575:
-            if self.target[2] >=  71.9998955286:
-                if self.target[2] >=  22.1599967919:
-                    print('apudi podu dandanaka')
+      
 
 if __name__ == '__main__':
 
