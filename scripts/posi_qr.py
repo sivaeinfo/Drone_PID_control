@@ -7,16 +7,29 @@ from vitarana_drone.msg import *
 from pid_tune.msg import PidTune
 from sensor_msgs.msg import Imu, NavSatFix
 from std_msgs.msg import Float32
+from std_msgs.msg import String
+from sensor_msgs.msg import Image
 import rospy
 import time
 import tf
+from pyzbar import pyzbar
+import cv2
+import roslib
+from cv_bridge import CvBridge, CvBridgeError
 
+
+time.sleep(3)
 
 class Edrone():
     """docstring for Edrone"""
     def __init__(self):
-        rospy.init_node('position_controller')  # initializing ros node with name drone_control
+        rospy.init_node('posi_qr')  # initializing ros node with name drone_control
 
+        self.bridge = CvBridge()
+        self.image_sub = rospy.Subscriber("/edrone/camera/image_raw", Image,  self.callback)
+        self.object_pub = rospy.Publisher("object_detection", String, queue_size=1)
+        self.image_pub = rospy.Publisher("image_topic_2", Image, queue_size=1)
+        
         # Format for drone_command
         self.cmd_drone = edrone_cmd()
         self.cmd_drone.rcRoll = 1500
@@ -30,12 +43,12 @@ class Edrone():
         self.altitude = 22.16
 
         # The coordinates in the target postion vector is in the order latitude, longitude and altitude
-        self.target = [19.0000000000000,72.000000000000000000,8.0000000000000]#[19.0009248718, 71.9998318945, 24.46] #[19.0007046575, 71.9998955286, 25.1599967919]  #[19.0007046575, 71.9998955286, 22.1599967919] #19.0000451700
+        self.target = [19.0007046575, 71.9998955286, 25.1599967919] #[19.000000, 72.000000, 0.8440] #[19.0007046575, 71.9998955286, 22.1599967919] #19.0000451700
 
         # Initial settings for the values of Kp, Ki and Kd
         self.Kp = [4000000, 50]
-        self.Ki = [0, 0.35]
-        self.Kd = [5000000, 79]#80]
+        self.Ki = [0, 0.32]
+        self.Kd = [5000000, 80]
         # -----------------------Add other required variables for pid here ----------------------------------------------
         self.error = [0, 0, 0]
         self.prev_error = [0, 0, 0]
@@ -56,7 +69,7 @@ class Edrone():
         # ----------------------------------------------------------------------------------------------------------
 
         # # This is the sample time in which you need to run pid. Choose any time which you seem fit. Remember the stimulation step time is 50 ms
-        self.sample_time = 0.08200#0.060  # in seconds
+        self.sample_time = 0.060  # in seconds
 
         # Publishing /edrone/pwm, /roll_error, /pitch_error, /yaw_error
         self.cmd_pub = rospy.Publisher('/drone_command', edrone_cmd, queue_size=1)
@@ -134,20 +147,69 @@ class Edrone():
         self.cmd_pub.publish(self.cmd_drone)
 
         print(self.latitude, self.longitude, self.altitude)
-        if self.altitude  >=  24.46:
+        if self.altitude  >= 2.9:
             self.target[0] = 19.0007046575 
-            
-         #   print(self.target)
-            
-        if self.latitude >= 19.0007046575: #19.0009248718
             self.target[1] = 71.9998955286
+            print(self.target)
+            #time.sleep(5)
 
-        if self.longitude >= 71.9998955286: 
-            self.target[2] = 22.7599967919
-        
-
-        print(self.target)
+        if self.latitude >= 19.0007046575:
+            if self.longitude >= 71.9998955286:
+                self.target[2] = 22.7599967919
+                print(self.target)
       
+    def callback(self, data):
+        cv_image = self.bridge.imgmsg_to_cv2(data, "bgr8")
+ 
+        # find the barcodes in the frame and decode each of the barcodes
+        barcodes = pyzbar.decode(cv_image)
+       
+        # loop through all the possible barcodes within images
+        for barcode in barcodes:
+            barcodeData = barcode.data.decode("utf-8")
+            self.image_pub.publish( self.bridge.cv2_to_imgmsg(cv_image, "bgr8"))
+            self.object_pub.publish(barcodeData)
+
+
+
+       # print(barcodeData)
+            barcode_type = barcode.type
+            print(barcode_type)
+
+         
+
+            dummy=[barcodeData]
+              #print(dummy)
+              #print(type(barcode_data))
+
+
+            bubble_gum = dummy[0].split(',')
+            unnaku_thevayana_value = map(float,bubble_gum)
+            print(unnaku_thevayana_value)
+
+            self.target[0]=unnaku_thevayana_value[0]
+            self.target[1]=unnaku_thevayana_value[1]
+            self.target[2]=unnaku_thevayana_value[2]
+
+        
+            while True:
+              if barcode_type== True:
+                print(barcodeData)
+                break
+
+            print(self.target)
+
+    def main(): 
+        qrd = qr_code_detector()
+    #rospy.init_node('qr_code_detector', anonymous=True)
+        try:
+            rospy.spin()
+        except KeyboardInterrupt:
+            print("Shutting down")
+        cv2.destroyAllWindows()
+
+
+
 
 if __name__ == '__main__':
 

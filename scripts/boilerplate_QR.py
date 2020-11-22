@@ -23,14 +23,16 @@ class Edrone():
         self.cmd_drone.rcPitch = 1500
         self.cmd_drone.rcYaw = 1500
         self.cmd_drone.rcThrottle = 1500
-
+        
         # The latitude, longitude and altitude of the drone
-        self.latitude = 19.0009248718
-        self.longitude = 71.9998318945
-        self.altitude = 22.16
+        self.latitude = 19.0009248718 #19.000726740239845  #19.0009248718 longitude: 71.9998318945 altitude: 22.16,
+        self.longitude = 71.9998318945#71.99988916669069    #19.000726740239845, 71.99988916669069, 22.28489547729492
+        self.altitude =  22.16 #22.28489547729492
+        print(self.latitude, self.longitude, self.altitude)
+
 
         # The coordinates in the target postion vector is in the order latitude, longitude and altitude
-        self.target = [19.0000000000000,72.000000000000000000,8.0000000000000]#[19.0009248718, 71.9998318945, 24.46] #[19.0007046575, 71.9998955286, 25.1599967919]  #[19.0007046575, 71.9998955286, 22.1599967919] #19.0000451700
+        self.target = [19.0000000000 , 72.000000000, 8.000000000]#[19.0009248718, 71.9998318945, 24.46] #[19.0007046575, 71.9998955286, 25.1599967919]  #[19.0007046575, 71.9998955286, 22.1599967919] #19.0000451700
 
         # Initial settings for the values of Kp, Ki and Kd
         self.Kp = [4000000, 50]
@@ -134,16 +136,16 @@ class Edrone():
         self.cmd_pub.publish(self.cmd_drone)
 
         print(self.latitude, self.longitude, self.altitude)
-        if self.altitude  >=  24.46:
-            self.target[0] = 19.0007046575 
+        if self.altitude  >=  24.6:
+            self.target[0] = 19.000000000 
             
          #   print(self.target)
             
-        if self.latitude >= 19.0007046575: #19.0009248718
-            self.target[1] = 71.9998955286
+        if self.latitude >= 19.0000000000: #19.0009248718
+            self.target[1] = 72.0000000000
 
-        if self.longitude >= 71.9998955286: 
-            self.target[2] = 22.7599967919
+        if self.longitude >= 72.0000000000: 
+            self.target[2] = 8.000
         
 
         print(self.target)

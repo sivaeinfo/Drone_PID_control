@@ -141,7 +141,7 @@ class Edrone():
            #time.sleep(2)
 
         if self.latitude >= 19.00004571:
-             self.target[2] = 0.31
+             self.target[2] = 0.81
              print(self.target)
             #time.sleep(2)
        
